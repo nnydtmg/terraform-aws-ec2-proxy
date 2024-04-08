@@ -44,17 +44,34 @@ resource "aws_iam_instance_profile" "ssm" {
 # EC2
 # ---------------------------
 # EC2作成
-resource "aws_instance" "app_ec2"{
+resource "aws_instance" "app_ec2" {
   ami                         = "ami-051f8a213df8bc089"
   instance_type               = "t3.micro"
-  availability_zone           = "${var.az_a}"
+  availability_zone           = var.az_a
   vpc_security_group_ids      = [aws_security_group.main_ec2_sg.id]
   subnet_id                   = aws_subnet.main_app_sn.id
   associate_public_ip_address = "false"
-  
+
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
   tags = {
     Name = "terraform-app-ec2"
   }
 }
+
+# # Proxy EC2作成
+# resource "aws_instance" "proxy_ec2" {
+#   ami                         = "ami-051f8a213df8bc089"
+#   instance_type               = "t3.micro"
+#   availability_zone           = var.az_a
+#   vpc_security_group_ids      = [aws_security_group.proxy_ec2_sg.id]
+#   subnet_id                   = aws_subnet.main_proxy_sn.id
+#   associate_public_ip_address = "false"
+#   source_dest_check           = false
+
+#   iam_instance_profile = aws_iam_instance_profile.ssm.name
+
+#   tags = {
+#     Name = "terraform-proxy-ec2"
+#   }
+# }
